@@ -1,0 +1,7 @@
+@mixin font($fs: 18, $lh: 28) {
+  font-family: 'Inter', sans-serif;
+  line-height: #{$lh}px;
+  font-weight: 400;
+  font-size: #{$fs}px;
+  color: #000;
+}

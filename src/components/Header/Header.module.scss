@@ -1,0 +1,33 @@
+@use '../../index.module.scss' as mix;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  height: 80px;
+  align-items: center;
+}
+
+.headerName {
+  @include mix.font();
+  text-decoration: none;
+}
+
+.sign {
+  display: flex;
+  gap: 10px;
+
+  .buttonSign {
+    @include mix.font();
+    height: 51px;
+    width: 109px;
+    background-color: #fff;
+    border: none;
+
+    &:hover,
+    &:active {
+      color: #52c41a;
+      border: 1px solid #52c41a;
+      border-radius: 5px;
+    }
+  }
+}

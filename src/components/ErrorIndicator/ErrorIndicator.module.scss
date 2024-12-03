@@ -1,0 +1,7 @@
+@use '../../index.module.scss' as mix;
+
+.errorIndicator {
+  @include mix.font(20, 28);
+  display: flex;
+  justify-content: center;
+}

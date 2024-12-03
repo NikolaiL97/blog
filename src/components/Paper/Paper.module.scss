@@ -1,0 +1,79 @@
+@use '../../index.module.scss' as mix;
+
+p {
+  margin: 0;
+}
+
+.paper {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  width: 938px;
+  height: 140px;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 4px 4px 12px #00000026;
+}
+
+.paperInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.paperName {
+  @include mix.font(20, 28);
+  color: #1890ff;
+  margin-right: 10px;
+  text-decoration: none;
+}
+
+.paperCounterLikes {
+  @include mix.font(12, 22);
+}
+
+.paperLikes {
+  display: inline-block;
+  width: 16px;
+  height: 14.23px;
+  color: #000;
+  margin-right: 5px;
+}
+.paperPeople {
+  display: flex;
+}
+
+.imageLogo {
+  border-radius: 50%;
+}
+
+.userName {
+  @include mix.font(18, 28);
+}
+
+.date {
+  @include mix.font(12, 22);
+  opacity: 50%;
+}
+
+$color: #000;
+$border-color: rgba($color, 0.5);
+
+.tag {
+  display: flex;
+  gap: 5px;
+}
+
+.tagItem {
+  @include mix.font(12, auto);
+  border: 1px solid $border-color;
+  border-radius: 2px;
+  background-color: #fafafa;
+  padding: 3px;
+}
+
+.body {
+  overflow: hidden;
+
+  @include mix.font(12, 22);
+}

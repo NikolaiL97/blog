@@ -1,0 +1,24 @@
+.signInButton {
+  background-color: #1890ff;
+  color: #fff;
+  width: 319px;
+  min-height: 40px;
+  border-radius: 4px;
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.signInFooter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.signInLink {
+  text-align: center;
+}
+
+.errorMessage {
+  color: red;
+}
