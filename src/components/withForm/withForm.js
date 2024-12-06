@@ -1,16 +1,12 @@
 import classes from './withForm.module.scss';
 
-const withForm = (Component) => {
-  console.log(Component);
-  return function f() {
+const withForm = (Component) =>
+  function f() {
     return (
       <div className={classes.sign}>
-        <form className={classes.formSign}>
-          <Component />
-        </form>
+        <Component />
       </div>
     );
   };
-};
 
 export default withForm;

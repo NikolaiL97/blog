@@ -5,17 +5,16 @@ import { useDispatch } from 'react-redux';
 
 import Likes from '../../images/Likes.svg';
 import { fetchArticleSlug } from '../../service/fetchApi';
-import { actions } from '../store/articles/articles';
-import UseStore from '../utilits';
+import { getArticleSlug } from '../store/articlesSlice/articlesSlice';
+import { UseStore } from '../utilits';
 
 import classes from './Paper.module.scss';
 
-function Paper({ article }) {
-  console.log(article);
+function Paper({ article, paperInfo }) {
+  console.log(paperInfo);
   const dispatch = useDispatch();
   if (!article) {
     const { articleSlug } = UseStore();
-    console.log(articleSlug);
     article = articleSlug;
   }
   const { title, tagList, body, author, createdAt, slug, favoritesCount } =
@@ -32,7 +31,7 @@ function Paper({ article }) {
   const onClickHandler = (slu) => {
     fetchArticleSlug(slu).then((item) => {
       console.log(item);
-      dispatch(actions.getArticleSlug(item));
+      dispatch(getArticleSlug(item));
     });
   };
 
@@ -70,6 +69,7 @@ function Paper({ article }) {
           />
         </div>
       </div>
+      {paperInfo && paperInfo}
     </div>
   );
 }

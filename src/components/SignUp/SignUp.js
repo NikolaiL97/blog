@@ -1,192 +1,151 @@
+/* eslint-disable quotes */
 /* eslint-disable no-useless-escape */
 import { Checkbox } from 'antd';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+// import { useDispatch } from 'react-redux';
 
 import withForm from '../withForm/withForm';
+// import { userAction } from '../store/user/user';
+import { postUser } from '../../service/fetchApi';
+import { isUsername } from '../utilits';
+import Button from '../Button/Button';
 
 import classes from './SignUp.module.scss';
 
 function SignUp() {
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [userNameDirty, setUsernameDirty] = useState(false);
-  const [emailDirty, setEmailDirty] = useState(false);
-  const [passwordDirty, setPasswordDirty] = useState(false);
-  const [repeatPasswordDirty, setRepeatPasswordDirty] = useState(false);
-  const [userNameError, setUsernameError] = useState(
-    'Имя пользователя не может быть пустым'
-  );
-  const [emailError, setEmailError] = useState(
-    'Поле Email не может быть пустым'
-  );
-  const [passwordError, setPasswordError] = useState(
-    'Your password needs to be at least 6 characters.'
-  );
-  const [repeatPasswordError, setRepeatPasswordError] =
-    useState('Password must muth');
   const [chek, setCheck] = useState(false);
-  const [formValid, setFormValid] = useState(false);
+  const [userPassword, setUserPassword] = useState('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: 'onBlur',
+    defaultValues: {
+      username: '123lolcec',
+      emailAddress: 'testoo@test.ru',
+      password: '123456',
+      repeatPassword: '123456',
+    },
+  });
+  const navigate = useNavigate();
+  // const dispatch = useDispatch();
 
-  if (
-    userNameError ||
-    emailError ||
-    passwordError ||
-    repeatPasswordError ||
-    !chek
-  ) {
-    if (formValid) setFormValid(false);
-  } else if (!formValid) {
-    setFormValid(true);
-  }
+  const chekHandler = (e) => setCheck(e.target.checked);
 
-  const chekHandler = () => {
-    setCheck((s) => !s);
+  const onSubmit = ({ username, emailAddress, password }) => {
+    console.log(typeof emailAddress);
+    const body = {
+      user: {
+        username,
+        email: emailAddress,
+        password,
+      },
+    };
+    console.log(JSON.stringify(body));
+    postUser(body)
+      .then((res) => {
+        console.log(res);
+        navigate('/');
+      })
+      .catch(Error);
+    // dispatch(userAction.addToUser(data));
   };
 
-  const emailHandler = (e) => {
-    setEmail(e.target.value);
-    const re =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!re.test(String(e.target.value).toLowerCase())) {
-      setEmailError('Некорректный Email');
-    } else {
-      setEmailError('');
-    }
-  };
+  const isPassword = (data) => setUserPassword(data);
 
-  const userNameHandler = (e) => {
-    setUserName(e.target.value);
-    if (e.target.value.length < 3 || e.target.value.length > 20) {
-      setUsernameError(
-        'Имя пользователя должно включать в себя от 3-х до 20 символов'
-      );
-    } else {
-      setUsernameError('');
+  const isRepeatPassword = (data) => {
+    if (data === userPassword) {
+      return true;
     }
-  };
-
-  const passwordHandler = (e) => {
-    setPassword(e.target.value);
-    if (e.target.value.length < 6 || e.target.value.length > 40) {
-      setPasswordError('Your password needs to be at least 6 characters.');
-    } else {
-      setPasswordError('');
-    }
-  };
-
-  const repeatPasswordHandler = (e) => {
-    setRepeatPassword(e.target.value);
-    if (e.target.value === password) {
-      setRepeatPasswordError('');
-    } else {
-      setRepeatPasswordError('Password must muth');
-    }
-  };
-
-  const blurHandler = (e) => {
-    switch (e.target.name) {
-      case 'Username':
-        setUsernameDirty(true);
-        break;
-      case 'Email address':
-        setEmailDirty(true);
-        break;
-      case 'Password':
-        setPasswordDirty(true);
-        break;
-      case 'Repeat Password':
-        setRepeatPasswordDirty(true);
-        break;
-
-      default:
-    }
+    return 'Passwords must match';
   };
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)} className={classes.formSign}>
       <h3>Create new account</h3>
       <p>Username</p>
       <input
-        onBlur={(e) => blurHandler(e)}
-        name="Username"
+        className={errors.username && classes.errorBorder}
         type="text"
         placeholder="Username"
-        value={userName}
-        onChange={(e) => userNameHandler(e)}
+        {...register('username', {
+          required: true,
+          validate: isUsername,
+        })}
       />
-      {userNameDirty && userNameError && (
-        <div>
-          <p className={classes.errorMessage}>{userNameError}</p>
-        </div>
-      )}
+
       <p>Email address</p>
       <input
-        onBlur={(e) => blurHandler(e)}
-        name="Email address"
-        type="text"
+        className={errors.emailAddress && classes.errorBorder}
+        type="email"
         placeholder="Email address"
-        value={email}
-        onChange={(e) => {
-          emailHandler(e);
-        }}
+        {...register('emailAddress', {
+          required: 'This field is req',
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+[A-Z]{2,4}$/i,
+            message: 'This field is requared',
+          },
+        })}
       />
-      {emailDirty && emailError && (
-        <div>
-          <p className={classes.errorMessage}>{emailError}</p>
-        </div>
-      )}
       <p>Password</p>
 
       <input
-        onBlur={(e) => blurHandler(e)}
-        name="Password"
+        className={errors.password && classes.errorBorder}
         type="password"
         placeholder="Password"
-        value={password}
-        onChange={(e) => {
-          passwordHandler(e);
-        }}
+        {...register('password', {
+          required: 'Your password needs to be at least 6 characters',
+          validate: isPassword,
+          minLength: {
+            value: 6,
+            message: 'Your password needs to be at least 6 characters',
+          },
+          maxLength: {
+            value: 40,
+            message: 'Your password must contain no more than 40 characters',
+          },
+        })}
       />
-      {passwordDirty && passwordError && (
-        <div>
-          <p className={classes.errorMessage}>{passwordError}</p>
-        </div>
+      {errors.password && (
+        <p className={classes.errorMessage}>{errors.password.message}</p>
       )}
       <p>Repeat Password</p>
 
       <input
-        name="Repeat Password"
+        className={errors.repeatPassword && classes.errorBorder}
         type="password"
         placeholder="Password"
-        onBlur={(e) => blurHandler(e)}
-        value={repeatPassword}
-        onChange={(e) => repeatPasswordHandler(e)}
+        {...register('repeatPassword', {
+          required: 'Passwords must match',
+          validate: isRepeatPassword,
+        })}
       />
-      {repeatPasswordDirty && repeatPasswordError && (
-        <div>
-          <p className={classes.errorMessage}>{repeatPasswordError}</p>
-        </div>
+      {errors.repeatPassword && (
+        <p className={classes.errorMessage}>{errors.repeatPassword.message}</p>
       )}
       <div>
-        <Checkbox onChange={chekHandler} />
+        <Checkbox onChange={(e) => chekHandler(e)} />
         <span>I agree to the processing of my personal information</span>
       </div>
       <div className={classes.signUpFooter}>
-        <button
-          disabled={!formValid}
-          type="button"
-          className={classes.signUpButton}
-        >
-          Create
-        </button>
+        <Button
+          disabled={
+            errors.username ||
+            errors.emailAddress ||
+            errors.password ||
+            errors.repeatPassword ||
+            !chek
+          }
+          title="Create"
+        />
         <p className={classes.signUpLink}>
           Already have an account? <Link to="/sign-in">Sign In.</Link>
         </p>
       </div>
-    </>
+    </form>
   );
 }
 

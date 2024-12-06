@@ -1,115 +1,66 @@
-/* eslint-disable no-useless-escape */
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import withForm from '../withForm/withForm';
 
 import classes from './SignIn.module.scss';
 
 function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: 'onBlur',
+    defaultValues: {
+      email: 'test@test.ru',
+    },
+  });
 
-  const [emailDirty, setEmailDirty] = useState(false);
-  const [passwordDirty, setPasswordDirty] = useState(false);
-
-  const [emailError, setEmailError] = useState(
-    'Поле Email не может быть пустым'
-  );
-  const [passwordError, setPasswordError] = useState(
-    'Поле пароля не может быть пустым'
-  );
-
-  const [formValid, setFormValid] = useState(false);
-
-  if (emailError || passwordError) {
-    if (formValid) setFormValid(false);
-  } else if (!formValid) {
-    setFormValid(true);
-  }
-
-  const emailHandler = (e) => {
-    setEmail(e.target.value);
-    const re =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!re.test(String(e.target.value).toLowerCase())) {
-      setEmailError('Некорректный Email');
-    } else {
-      setEmailError('');
-    }
-  };
-
-  const passwordHandler = (e) => {
-    setPassword(e.target.value);
-    if (e.target.value.length === 0) {
-      setPasswordError('Поле пароля не может быть пустым');
-    } else {
-      setPasswordError('');
-    }
-  };
-
-  const blurHandler = (e) => {
-    switch (e.target.name) {
-      case 'Email address':
-        setEmailDirty(true);
-        break;
-      case 'Password':
-        setPasswordDirty(true);
-        break;
-
-      default:
-    }
+  const onSubmit = (data) => {
+    console.log(data);
   };
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)} className={classes.formSign}>
       <h3>Sign In</h3>
       <p>Email address</p>
       <input
-        onBlur={(e) => blurHandler(e)}
-        name="Email address"
-        type="text"
+        className={errors['email address'] && classes.errorBorder}
+        type="email"
         placeholder="Email address"
-        value={email}
-        onChange={(e) => {
-          emailHandler(e);
-        }}
+        {...register('email address', {
+          required: 'This field is requared',
+        })}
       />
-      {emailDirty && emailError && (
-        <div>
-          <p className={classes.errorMessage}>{emailError}</p>
-        </div>
+      {errors['email address'] && (
+        <p className={classes.errorMessage}>
+          {errors['email address'].message}
+        </p>
       )}
       <p>Password</p>
       <input
-        onBlur={(e) => blurHandler(e)}
-        name="Password"
+        className={errors.password && classes.errorBorder}
         type="password"
         placeholder="Password"
-        value={password}
-        onChange={(e) => {
-          passwordHandler(e);
-        }}
+        {...register('password', {
+          required: 'This field is requared',
+        })}
       />
-      {passwordDirty && passwordError && (
-        <div>
-          <p className={classes.errorMessage}>{passwordError}</p>
-        </div>
+      {errors.password && (
+        <p className={classes.errorMessage}>{errors.password.message}</p>
       )}
-
-      <div className={classes.signInFooter}>
-        <button
-          disabled={!formValid}
-          type="button"
-          className={classes.signInButton}
-        >
-          Login
-        </button>
-        <p className={classes.signInLink}>
-          Don’t have an account? <Link to="/sign-up">Sign Up.</Link>
-        </p>
-      </div>
-    </>
+      <button
+        disabled={errors['email address'] || errors.password}
+        type="submit"
+        className={classes.signInButton}
+      >
+        Login
+      </button>
+      <p className={classes.signInLink}>
+        Don’t have an account? <Link to="/sign-up">Sign Up.</Link>
+      </p>
+    </form>
   );
 }
 

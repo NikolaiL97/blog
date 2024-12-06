@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Pagination } from 'antd';
 import { useDispatch } from 'react-redux';
 
-import { actions } from '../store/articles/articles';
-import UseStore from '../utilits';
+import { getPage } from '../store/articlesSlice/articlesSlice';
+import { UseStore } from '../utilits';
 
 function Paginations() {
   const dispatch = useDispatch();
   const [current, setCurrent] = useState(1);
 
   useEffect(() => {
-    dispatch(actions.getPage(current));
+    dispatch(getPage(current));
   }, [current, dispatch]);
 
   const { articlesCount } = UseStore();

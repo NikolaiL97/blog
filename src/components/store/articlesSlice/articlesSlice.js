@@ -36,4 +36,5 @@ export const articlesSlice = createSlice({
   },
 });
 
-export const { actions, reducer } = articlesSlice;
+export const articlesReducer = articlesSlice.reducer;
+export const { addToArticles, getPage, getArticleSlug } = articlesSlice.actions;

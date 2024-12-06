@@ -1,8 +1,8 @@
 import { Spin } from 'antd';
 
-import Paginations from '../Paginations/Painations';
+import Paginations from '../Paginations/Paginations';
 import Paper from '../Paper/Paper';
-import UseStore from '../utilits';
+import { UseStore } from '../utilits';
 
 import classes from './PaperList.module.scss';
 

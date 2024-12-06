@@ -1,0 +1,20 @@
+@use '../../index.module.scss' as mix;
+
+.errorBorder {
+  border: 2px solid red;
+  border-radius: 4px;
+}
+
+.formSign {
+  @include mix.font(20, 28);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #fff;
+  width: 384px;
+  max-height: 599px;
+  box-sizing: border-box;
+  padding: 27px;
+  gap: 9px;
+  border-radius: 6px;
+}
