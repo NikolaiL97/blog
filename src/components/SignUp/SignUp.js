@@ -4,10 +4,9 @@ import { Checkbox } from 'antd';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-// import { useDispatch } from 'react-redux';
 
+import ErrorIndicator from '../ErrorIndicator/ErrorIndicator';
 import withForm from '../withForm/withForm';
-// import { userAction } from '../store/user/user';
 import { postUser } from '../../service/fetchApi';
 import { isUsername } from '../utilits';
 import Button from '../Button/Button';
@@ -17,6 +16,9 @@ import classes from './SignUp.module.scss';
 function SignUp() {
   const [chek, setCheck] = useState(false);
   const [userPassword, setUserPassword] = useState('');
+  const [errorUsername, setErrorUsername] = useState(null);
+  const [errorEmail, setErrorEmail] = useState(null);
+  const [error, setError] = useState(false);
   const {
     register,
     handleSubmit,
@@ -24,19 +26,21 @@ function SignUp() {
   } = useForm({
     mode: 'onBlur',
     defaultValues: {
-      username: '123lolcec',
-      emailAddress: 'testoo@test.ru',
+      username: 'Lexaaas',
+      emailAddress: 'plexaaaaaas@test.ru',
       password: '123456',
       repeatPassword: '123456',
     },
   });
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
 
   const chekHandler = (e) => setCheck(e.target.checked);
 
+  const errorFn = () => {
+    setError(true);
+  };
+
   const onSubmit = ({ username, emailAddress, password }) => {
-    console.log(typeof emailAddress);
     const body = {
       user: {
         username,
@@ -44,14 +48,16 @@ function SignUp() {
         password,
       },
     };
-    console.log(JSON.stringify(body));
     postUser(body)
       .then((res) => {
-        console.log(res);
-        navigate('/');
+        if (res.errors) {
+          setErrorUsername(res.errors.username);
+          setErrorEmail(res.errors.email);
+        } else {
+          navigate('/sign-in');
+        }
       })
-      .catch(Error);
-    // dispatch(userAction.addToUser(data));
+      .catch(() => errorFn());
   };
 
   const isPassword = (data) => setUserPassword(data);
@@ -63,12 +69,14 @@ function SignUp() {
     return 'Passwords must match';
   };
 
-  return (
+  return error ? (
+    <ErrorIndicator />
+  ) : (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.formSign}>
       <h3>Create new account</h3>
       <p>Username</p>
       <input
-        className={errors.username && classes.errorBorder}
+        className={(errors.username || errorUsername) && classes.errorBorder}
         type="text"
         placeholder="Username"
         {...register('username', {
@@ -76,10 +84,10 @@ function SignUp() {
           validate: isUsername,
         })}
       />
-
+      {errorUsername && <p className={classes.errorMessage}>{errorUsername}</p>}
       <p>Email address</p>
       <input
-        className={errors.emailAddress && classes.errorBorder}
+        className={(errors.emailAddress || errorEmail) && classes.errorBorder}
         type="email"
         placeholder="Email address"
         {...register('emailAddress', {
@@ -90,6 +98,7 @@ function SignUp() {
           },
         })}
       />
+      {errorEmail && <p className={classes.errorMessage}>{errorEmail}</p>}
       <p>Password</p>
 
       <input

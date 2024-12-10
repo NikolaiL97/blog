@@ -1,11 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import withForm from '../withForm/withForm';
+import { signInUser } from '../../service/fetchApi';
+import { userAction } from '../store/userSlice/userSlice';
+import ErrorIndicator from '../ErrorIndicator/ErrorIndicator';
 
 import classes from './SignIn.module.scss';
 
 function SignIn() {
+  const [errorSignIn, setErrorSignIn] = useState('');
+  const [error, setError] = useState(false);
   const {
     register,
     handleSubmit,
@@ -13,34 +20,57 @@ function SignIn() {
   } = useForm({
     mode: 'onBlur',
     defaultValues: {
-      email: 'test@test.ru',
+      email: 'plexaaaaaas@test.ru',
     },
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const errorFn = () => {
+    setError(true);
   };
 
-  return (
+  const onSubmit = ({ email, password }) => {
+    const body = {
+      user: {
+        email,
+        password,
+      },
+    };
+    signInUser(body)
+      .then((res) => {
+        if (res.errors) {
+          setErrorSignIn('Data is invalid');
+        } else {
+          res.user.password = password;
+          dispatch(userAction.addToUser(res.user));
+          localStorage.setItem('user', JSON.stringify(res.user));
+          navigate('/');
+        }
+      })
+      .catch(() => errorFn());
+  };
+
+  return error ? (
+    <ErrorIndicator />
+  ) : (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.formSign}>
       <h3>Sign In</h3>
       <p>Email address</p>
       <input
-        className={errors['email address'] && classes.errorBorder}
+        className={(errors.email || errorSignIn) && classes.errorBorder}
         type="email"
         placeholder="Email address"
-        {...register('email address', {
+        {...register('email', {
           required: 'This field is requared',
         })}
       />
-      {errors['email address'] && (
-        <p className={classes.errorMessage}>
-          {errors['email address'].message}
-        </p>
+      {errors.email && (
+        <p className={classes.errorMessage}>{errors.email.message}</p>
       )}
       <p>Password</p>
       <input
-        className={errors.password && classes.errorBorder}
+        className={(errors.password || errorSignIn) && classes.errorBorder}
         type="password"
         placeholder="Password"
         {...register('password', {
@@ -50,6 +80,7 @@ function SignIn() {
       {errors.password && (
         <p className={classes.errorMessage}>{errors.password.message}</p>
       )}
+      {errorSignIn && <p className={classes.errorMessage}>{errorSignIn}</p>}
       <button
         disabled={errors['email address'] || errors.password}
         type="submit"

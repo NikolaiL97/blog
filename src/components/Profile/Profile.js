@@ -1,12 +1,22 @@
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 
-import { isUrl, isUsername } from '../utilits';
+import { UseUser, isUrl, isUsername } from '../utilits';
 import withForm from '../withForm/withForm';
 import Button from '../Button/Button';
+import { putUser } from '../../service/fetchApi';
+import { userAction } from '../store/userSlice/userSlice';
+import ErrorIndicator from '../ErrorIndicator/ErrorIndicator';
 
 import classes from './profile.module.scss';
 
 function Profile() {
+  const [error, setError] = useState(false);
+  const { username, email, password, token } = UseUser();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -14,31 +24,46 @@ function Profile() {
   } = useForm({
     mode: 'onBlure',
     defaultValues: {
-      username: '123',
-      emailAddress: 'test@test.ru',
-      password: '123456',
+      Username: `${username}`,
+      emailAddress: `${email}`,
+      Password: `${password}`,
+      avatarImage: null,
     },
   });
 
-  const submit = (data) => {
-    console.log(data);
+  const errorFn = () => {
+    setError(true);
   };
 
-  const error = (data) => {
-    console.log(data);
+  const submit = ({ emailAddress, Username, Password, avatarImage }) => {
+    const body = {
+      user: {
+        email: emailAddress,
+        username: Username,
+        password: Password,
+        image: avatarImage,
+      },
+    };
+    putUser(JSON.parse(token), body)
+      .then((res) => {
+        localStorage.setItem('user', JSON.stringify(res.user));
+        dispatch(userAction.addToUser(res.user));
+        navigate('/');
+      })
+      .catch(() => errorFn());
   };
 
-  console.log(errors);
-
-  return (
-    <form onSubmit={handleSubmit(submit, error)} className={classes.formSign}>
+  return error ? (
+    <ErrorIndicator />
+  ) : (
+    <form onSubmit={handleSubmit(submit)} className={classes.formSign}>
       <h3>Edit Profile</h3>
       <p>Username</p>
       <input
-        className={errors.username && classes.errorBorder}
+        className={errors.Username && classes.errorBorder}
         type="text"
         placeholder="Username"
-        {...register('username', {
+        {...register('Username', {
           required: 'This field is requared',
           validate: isUsername,
         })}
@@ -58,10 +83,10 @@ function Profile() {
       />
       <p>Password</p>
       <input
-        className={errors.password && classes.errorBorder}
+        className={errors.Password && classes.errorBorder}
         type="password"
         placeholder="Password"
-        {...register('password', {
+        {...register('Password', {
           required: 'Your password needs to be at least 6 characters',
           minLength: {
             value: 6,

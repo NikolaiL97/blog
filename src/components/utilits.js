@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 
 export const UseStore = () => {
-  const { articles, loader, articlesCount, page, articleSlug } = useSelector(
+  const { articles, loader, articlesCount, page } = useSelector(
     (state) => state.article
   );
   const offSet = (page - 1) * 5;
@@ -11,23 +11,31 @@ export const UseStore = () => {
     loader,
     offSet,
     articlesCount,
-    articleSlug,
   };
 };
 
-export const UseAuth = () => {
-  const { emailAddress, password, username } = useSelector(
+export const UseUser = () => {
+  const { username, email, token, password, image } = useSelector(
     (state) => state.user
   );
   return {
-    isAuth: !!emailAddress,
-    emailAddress,
-    password,
+    isUser: !!username,
     username,
+    email,
+    token,
+    password,
+    image,
+  };
+};
+
+export const UseArticleSlug = () => {
+  const { articleSlug } = useSelector((state) => state);
+  return {
+    articleSlug,
   };
 };
 
 export const isUsername = (data) => !!(data.length > 2 && data.length < 21);
 
 export const isUrl = (data) =>
-  URL.canParse(data) ? true : 'This url is not valid';
+  URL.canParse(data) || null ? true : 'This url is not valid';

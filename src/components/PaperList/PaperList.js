@@ -8,9 +8,7 @@ import classes from './PaperList.module.scss';
 
 function PaperList() {
   const { articles, loader } = UseStore();
-  const elem = articles?.map((el) => (
-    <Paper key={el.slug} article={el} Componet={{}} />
-  ));
+  const elem = articles?.map((el) => <Paper key={el.slug} article={el} />);
   const spinner = loader ? (
     <div className={classes.spinner}>
       <Spin />

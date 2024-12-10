@@ -2,21 +2,28 @@ import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import Markdown from 'markdown-to-jsx';
 import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 
 import Likes from '../../images/Likes.svg';
-import { fetchArticleSlug } from '../../service/fetchApi';
-import { getArticleSlug } from '../store/articlesSlice/articlesSlice';
-import { UseStore } from '../utilits';
+// import { getArticleSlug } from '../store/articlesSlice/articlesSlice';
+import { UseArticleSlug } from '../utilits';
+import { fetchASlug } from '../store/articleSlugSlice/articleSlug';
 
 import classes from './Paper.module.scss';
 
-function Paper({ article, paperInfo }) {
-  console.log(paperInfo);
+function Paper({ article }) {
   const dispatch = useDispatch();
+  const [desc, setDesc] = useState(false);
+
   if (!article) {
-    const { articleSlug } = UseStore();
-    article = articleSlug;
+    if (!desc) {
+      setDesc(true);
+    }
+
+    const { articleSlug } = UseArticleSlug();
+    article = articleSlug.articles;
   }
+
   const { title, tagList, body, author, createdAt, slug, favoritesCount } =
     article;
   const { username, image = '' } = author;
@@ -29,47 +36,49 @@ function Paper({ article, paperInfo }) {
   ));
 
   const onClickHandler = (slu) => {
-    fetchArticleSlug(slu).then((item) => {
-      console.log(item);
-      dispatch(getArticleSlug(item));
-    });
+    dispatch(fetchASlug(slu));
   };
 
   return (
-    <div className={classes.paper}>
-      <div className={classes.paperInfo}>
-        <div>
-          <Link
-            to={`/articles/${slug}`}
-            className={classes.paperName}
-            onClick={() => onClickHandler(slug)}
-          >
-            {title}
-          </Link>
-          <img src={Likes} alt="Likes" className={classes.paperLikes} />
-          <span className={classes.paperCounterLikes}>{favoritesCount}</span>
+    <div className={`${classes.pep} ${desc && classes.pepDesc}`}>
+      <div className={classes.paper}>
+        <div className={classes.paperInfo}>
+          <div>
+            <Link
+              to={`/articles/${slug}`}
+              // to="/"
+              className={classes.paperName}
+              onClick={() => onClickHandler(slug)}
+            >
+              {title}
+            </Link>
+            <img src={Likes} alt="Likes" className={classes.paperLikes} />
+            <span className={classes.paperCounterLikes}>{favoritesCount}</span>
+          </div>
+          <div className={`${classes.tag} ${desc && classes.tagDesc}`}>
+            {tag}
+          </div>
+          <div className={`${classes.body} ${desc && classes.bodyDesc}`}>
+            <Markdown>{body}</Markdown>
+          </div>
         </div>
-        <div className={classes.tag}>{tag}</div>
-        <div className={classes.body}>
-          <Markdown>{body}</Markdown>
+        <div className={classes.paperPeople}>
+          <div>
+            <p className={classes.userName}>{username}</p>
+            <p className={classes.date}>{createdDate}</p>
+          </div>
+          <div>
+            <img
+              src={image}
+              alt="logo"
+              height={46}
+              width={46}
+              className={classes.imageLogo}
+            />
+          </div>
         </div>
       </div>
-      <div className={classes.paperPeople}>
-        <div>
-          <p className={classes.userName}>{username}</p>
-          <p className={classes.date}>{createdDate}</p>
-        </div>
-        <div>
-          <img
-            src={image}
-            alt="logo"
-            height={46}
-            width={46}
-            className={classes.imageLogo}
-          />
-        </div>
-      </div>
-      {paperInfo && paperInfo}
+      {desc && <Markdown>{article.description}</Markdown>}
     </div>
   );
 }

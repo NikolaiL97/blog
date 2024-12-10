@@ -4,16 +4,33 @@ p {
   margin: 0;
 }
 
+.pep {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  box-shadow: 4px 4px 12px #00000026;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  width: 938px;
+  height: 140px;
+}
+
+.pepDesc {
+  min-height: 540px;
+}
+
 .paper {
   display: flex;
   justify-content: space-between;
-  background-color: #fff;
-  width: 938px;
-  height: 140px;
-  box-sizing: border-box;
-  padding: 20px;
-  margin-bottom: 15px;
-  box-shadow: 4px 4px 12px #00000026;
+  height: 120px;
+  overflow: hidden;
+  // background-color: #fff;
+  // box-shadow: 4px 4px 12px #00000026;
+  // padding: 20px;
+  // margin-bottom: 15px;
+  // box-sizing: border-box;
+  // width: 938px;
 }
 
 .paperInfo {
@@ -63,6 +80,9 @@ $border-color: rgba($color, 0.5);
   display: flex;
   gap: 5px;
 }
+.tagDesc {
+  opacity: 0.5;
+}
 
 .tagItem {
   @include mix.font(12, auto);
@@ -76,4 +96,12 @@ $border-color: rgba($color, 0.5);
   overflow: hidden;
 
   @include mix.font(12, 22);
+}
+
+.bodyDesc {
+  opacity: 0.5;
+}
+
+.description {
+  width: 880px;
 }
