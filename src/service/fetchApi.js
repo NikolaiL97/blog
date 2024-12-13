@@ -1,24 +1,21 @@
 /* eslint-disable no-await-in-loop */
-export async function fetchArticles(offSet) {
-  let counter = 0;
-  let res = await fetch(
-    `https://blog-platform.kata.academy/api/articles?limit=5&offset=${offSet}`
-  );
-  if (!res.ok) {
-    while (counter < 3) {
-      counter++;
-
-      res = await fetch(
-        (res = await fetch(
-          'https://blog-platform.kata.academy/api/articles?limit=5&offset=0'
-        ))
-      );
-      if (res.ok) {
-        counter = 0;
-        break;
+export async function fetchArticles(offSet, token = null) {
+  let res;
+  if (!token) {
+    res = await fetch(
+      `https://blog-platform.kata.academy/api/articles?limit=5&offset=${offSet}`
+    );
+  } else {
+    res = await fetch(
+      `https://blog-platform.kata.academy/api/articles?limit=5&offset=${offSet}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    }
+    );
   }
+
   if (!res.ok) {
     throw new Error('WOOOW');
   }
@@ -86,6 +83,65 @@ export async function signInUser(body) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
+    }
+  );
+
+  const data = await res.json();
+  return data;
+}
+
+export async function createArticle(token, body) {
+  const res = await fetch('https://blog-platform.kata.academy/api/articles', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data = await res.json();
+  return data;
+}
+
+export async function updateArticle(token, slug, body) {
+  const res = await fetch(
+    `https://blog-platform.kata.academy/api/articles/${slug}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    }
+  );
+
+  return res;
+}
+
+export async function deleteArticle(slug, token) {
+  const res = await fetch(
+    `https://blog-platform.kata.academy/api/articles/${slug}`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res;
+}
+
+export async function slugFavorite(slug, token) {
+  const res = await fetch(
+    `https://blog-platform.kata.academy/api/articles/${slug}/favorite`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 

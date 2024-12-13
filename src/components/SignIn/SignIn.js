@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import withForm from '../withForm/withForm';
-import { signInUser } from '../../service/fetchApi';
+import { fetchArticles, signInUser } from '../../service/fetchApi';
 import { userAction } from '../store/userSlice/userSlice';
 import ErrorIndicator from '../ErrorIndicator/ErrorIndicator';
+import { addToArticles } from '../store/articlesSlice/articlesSlice';
 
 import classes from './SignIn.module.scss';
 
@@ -19,9 +20,6 @@ function SignIn() {
     formState: { errors },
   } = useForm({
     mode: 'onBlur',
-    defaultValues: {
-      email: 'plexaaaaaas@test.ru',
-    },
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,7 +43,10 @@ function SignIn() {
           res.user.password = password;
           dispatch(userAction.addToUser(res.user));
           localStorage.setItem('user', JSON.stringify(res.user));
-          navigate('/');
+          fetchArticles(0, res.user.token).then((item) => {
+            dispatch(addToArticles(item));
+            navigate('/');
+          });
         }
       })
       .catch(() => errorFn());

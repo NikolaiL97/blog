@@ -6,6 +6,7 @@ const initialState = {
   loader: true,
   page: 1,
   articleSlug: null,
+  update: false,
 };
 
 export const articlesSlice = createSlice({
@@ -33,8 +34,15 @@ export const articlesSlice = createSlice({
         articleSlug: payload,
       };
     },
+    getUpdateArticle(state) {
+      return {
+        ...state,
+        update: !state.update,
+      };
+    },
   },
 });
 
 export const articlesReducer = articlesSlice.reducer;
-export const { addToArticles, getPage, getArticleSlug } = articlesSlice.actions;
+export const { addToArticles, getPage, getArticleSlug, getUpdateArticle } =
+  articlesSlice.actions;

@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 
 export const UseStore = () => {
-  const { articles, loader, articlesCount, page } = useSelector(
+  const { articles, loader, articlesCount, page, update } = useSelector(
     (state) => state.article
   );
   const offSet = (page - 1) * 5;
@@ -11,6 +11,7 @@ export const UseStore = () => {
     loader,
     offSet,
     articlesCount,
+    update,
   };
 };
 

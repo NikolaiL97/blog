@@ -25,12 +25,6 @@ function SignUp() {
     formState: { errors },
   } = useForm({
     mode: 'onBlur',
-    defaultValues: {
-      username: 'Lexaaas',
-      emailAddress: 'plexaaaaaas@test.ru',
-      password: '123456',
-      repeatPassword: '123456',
-    },
   });
   const navigate = useNavigate();
 

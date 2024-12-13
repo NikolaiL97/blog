@@ -1,0 +1,79 @@
+@use '../../index.module.scss' as mix;
+
+.form {
+  display: flex;
+  justify-content: center;
+}
+
+.newArticle {
+  @include mix.font(20, 28);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  width: 938px;
+  min-height: 701px;
+  box-sizing: border-box;
+  padding: 27px;
+  gap: 9px;
+  border-radius: 6px;
+
+  p {
+    align-self: flex-start;
+  }
+  input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #bfbfbf;
+
+    &::placeholder {
+      vertical-align: text-top;
+    }
+  }
+
+  .textArea {
+    height: 168px;
+    width: 100%;
+  }
+
+  .tagsAdd {
+    display: flex;
+    align-self: flex-start;
+    gap: 15px;
+
+    button {
+      align-self: flex-end;
+      height: 40px;
+      width: 120px;
+      background-color: #fff;
+      border: 1px solid #f5222d;
+      color: #f5222d;
+      border-radius: 4px;
+    }
+    .addButton {
+      width: 136px;
+      border: 1px solid #1890ff;
+      color: #1890ff;
+    }
+  }
+
+  .tags {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tagInput {
+    width: 300px;
+    margin-right: 15px;
+  }
+}
+
+.buttonSend {
+  align-self: flex-start;
+  width: 319px;
+  height: 40px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 0px;
+}

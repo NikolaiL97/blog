@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 
 import { UseUser } from '../utilits';
 import { userAction } from '../store/userSlice/userSlice';
+import { fetchArticles } from '../../service/fetchApi';
+import { getUpdateArticle } from '../store/articlesSlice/articlesSlice';
 
 import classes from './Header.module.scss';
 
@@ -13,6 +15,7 @@ function Header() {
   const LogOutClick = () => {
     localStorage.removeItem('user');
     dispatch(userAction.logOutUser());
+    fetchArticles().then(dispatch(getUpdateArticle()));
   };
 
   return (
@@ -35,7 +38,7 @@ function Header() {
         </div>
       ) : (
         <div className={classes.sign}>
-          <Link to="/">
+          <Link to="/new-article">
             <button className={classes.buttonCreateArticle} type="button">
               Create article
             </button>

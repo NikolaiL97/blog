@@ -16,7 +16,7 @@ p {
   height: 140px;
 }
 
-.pepDesc {
+.pepIsBody {
   min-height: 540px;
 }
 
@@ -25,12 +25,6 @@ p {
   justify-content: space-between;
   height: 120px;
   overflow: hidden;
-  // background-color: #fff;
-  // box-shadow: 4px 4px 12px #00000026;
-  // padding: 20px;
-  // margin-bottom: 15px;
-  // box-sizing: border-box;
-  // width: 938px;
 }
 
 .paperInfo {
@@ -58,6 +52,8 @@ p {
 }
 .paperPeople {
   display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .imageLogo {
@@ -80,7 +76,7 @@ $border-color: rgba($color, 0.5);
   display: flex;
   gap: 5px;
 }
-.tagDesc {
+.tagIsBody {
   opacity: 0.5;
 }
 
@@ -92,16 +88,47 @@ $border-color: rgba($color, 0.5);
   padding: 3px;
 }
 
-.body {
+.description {
   overflow: hidden;
 
   @include mix.font(12, 22);
 }
 
-.bodyDesc {
+.descriptionIsBody {
   opacity: 0.5;
 }
 
-.description {
-  width: 880px;
+.paperPeopleButton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.buttonArticle {
+  display: flex;
+  gap: 10px;
+  align-self: flex-end;
+
+  .buttonDelete {
+    height: 31px;
+    width: 78px;
+    background-color: #fff;
+    border: 1px solid #f5222d;
+    color: #f5222d;
+    border-radius: 5px;
+  }
+
+  .buttonEdit {
+    height: 31px;
+    width: 65px;
+    background-color: #fff;
+    border: 1px solid #52c41a;
+    color: #52c41a;
+    border-radius: 5px;
+  }
+}
+
+.errorMessage {
+  margin: 0;
+  color: red;
 }

@@ -14,7 +14,7 @@ import classes from './profile.module.scss';
 
 function Profile() {
   const [error, setError] = useState(false);
-  const { username, email, password, token } = UseUser();
+  const { username, email, token } = UseUser();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -26,7 +26,7 @@ function Profile() {
     defaultValues: {
       Username: `${username}`,
       emailAddress: `${email}`,
-      Password: `${password}`,
+      Password: null,
       avatarImage: null,
     },
   });
