@@ -34,6 +34,7 @@ function Profile() {
   const errorFn = () => {
     setError(true);
   };
+  console.log('test-3');
 
   const submit = ({
     emailAddressTest,

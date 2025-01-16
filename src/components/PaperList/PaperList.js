@@ -14,6 +14,7 @@ function PaperList() {
       <Spin />
     </div>
   ) : null;
+  console.log(1);
 
   return (
     <div className={classes.centr}>

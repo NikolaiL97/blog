@@ -27,7 +27,7 @@ function SignIn() {
   const errorFn = () => {
     setError(true);
   };
-
+  console.log('test-2.1');
   const onSubmit = ({ email, password }) => {
     const body = {
       user: {

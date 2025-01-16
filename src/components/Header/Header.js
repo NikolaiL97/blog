@@ -17,6 +17,7 @@ function Header() {
     dispatch(userAction.logOutUser());
     fetchArticles().then(dispatch(getUpdateArticle()));
   };
+  console.log('test-2');
 
   return (
     <div className={classes.header}>
