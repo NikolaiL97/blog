@@ -18,7 +18,7 @@ function ArticleForm({
   let description = '';
   let body = '';
   let tagList = '';
-
+  console.log('1')
   if (articles) {
     title = articles.title;
     description = articles.description;
@@ -33,7 +33,8 @@ function ArticleForm({
       body: `${body}`,
     },
   });
-
+  console.log('2')
+  console.log('3')
   const elem = arrTag?.map((item, idx) => (
     <div key={`${item}-${idx + 100}`}>
       <input

@@ -34,14 +34,14 @@ function Profile() {
   const errorFn = () => {
     setError(true);
   };
-
-  const submit = ({ emailAddress, Username, Password, avatarImage }) => {
+  console.log('test-and-nick');
+  const submit = ({ emailAdd, UserN, Pass, img }) => {
     const body = {
       user: {
-        email: emailAddress,
-        username: Username,
-        password: Password,
-        image: avatarImage,
+        email: emailAdd,
+        username: UserN,
+        password: Pass,
+        image: img,
       },
     };
     putUser(JSON.parse(token), body)
